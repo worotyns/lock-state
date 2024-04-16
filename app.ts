@@ -60,12 +60,6 @@ router.patch("/locks/:lockId/unlock", async (ctx) => {
   ctx.response.status = 204;
 });
 
-router.patch("/locks/:lockId/toggle", async (ctx) => {
-  const key = ctx.request.url.searchParams.get("k") || "";
-  await lockStateAppService.toggle(ctx.params.lockId, key);
-  ctx.response.status = 204;
-});
-
 router.get("/", (ctx) => {
   ctx.response.status = 200;
   ctx.response.headers.append("content-type", "text/html");
