@@ -65,6 +65,8 @@ router.get('/', ctx => {
     # Using in github actions to stop pipeline if locked
     curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -f && echo "there is no lock"
     curl: (22) The requested URL returned error: 423
+
+    # Want to have own deployment? Here you have source code: https://github.com/worotyns/lock-state
     `
 })
 
