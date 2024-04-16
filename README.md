@@ -18,9 +18,7 @@ HTTP **POST** `https://lock-states.deno.dev/locks`
 - `e=ttl_in_seconds` optional
 ### Returns:
 - 200 = created
-### Example:
-lockId is your lock identity
-lockKey you should to use when you want to lock/unlock and add as ?k=<lockKey> url param
+### Examples:
 ```sh
 curl -X POST https://lock-states.deno.dev/locks            
 {
@@ -28,6 +26,17 @@ curl -X POST https://lock-states.deno.dev/locks
     "lockKey":"b749f750-fbe3-11ee-9224-d7fd2399170d",
 }
 ```
+`lockId` is your lock identity and `lockKey` you should use as ?k=<lockKey> url param when you want to **lock/unlock**
+
+This lock will be locked by default and expire after 60 seconds
+```sh
+curl -X POST https://lock-states.deno.dev/locks?l=t&e=60           
+{
+    "lockId":"01hvkab4t422rap18rwjs2prnm",
+    "lockKey":"b749f750-fbe3-11ee-9224-d7fd2399170d",
+}
+```
+
 
 ## Get lock state
 HTTP **GET** `https://lock-states.deno.dev/locks/:lockId`
