@@ -1,0 +1,13 @@
+{
+  "tasks": {
+    "deploy": "deployctl deploy --prod --project='lock-states' --entrypoint='./main.ts'"
+  },
+  "deploy": {
+    "project": "8e834729-94bc-495a-8728-6d5de547a9c1",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "include": [],
+    "entrypoint": "main.ts"
+  }
+}
