@@ -9,7 +9,7 @@ Sample usecases:
  - System CRONs, that can be "locked",
  - Other cases when on system level (curl access) you want to stop executing in flow.
 
-This service can be used in production with low workloads.
+This service can be used for free in production with low workloads.
 
 ## Create new lock
 HTTP **POST** `https://lock-states.deno.dev/locks`
