@@ -1,6 +1,11 @@
 # LockState Service
 
-Simple service with lock management. This service can be used in production with
+Simple service with lock management. 
+With just a few API calls, you can create, check, and modify locks effortlessly.
+
+It may be useful for Github Actions Pipelines (like lock QA branch deployment when E2E testing is turning on etc.)
+
+This service can be used in production with
 low workloads.
 
 ## Create new lock
