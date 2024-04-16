@@ -49,45 +49,53 @@ router.patch('/locks/:lockId/toggle', async (ctx) => {
 router.get('/', ctx => {
     ctx.response.status = 200;
     ctx.response.body = html`
-
     # Create new lock
-    # HTTP POST https://lock-states.deno.dev/locks
-    # Returns 200 with JSON contains lock data
-    curl -X POST https://lock-states.deno.dev/locks            
-    {"lockId":"01hvkab4t422rap18rwjs2prnm","lockKey":"b749f750-fbe3-11ee-9224-d7fd2399170d","isLocked":false}
+      HTTP POST https://lock-states.deno.dev/locks
+      
+      Returns 200 = created 
+      Example:
+        curl -X POST https://lock-states.deno.dev/locks            
+        {"lockId":"01hvkab4t422rap18rwjs2prnm","lockKey":"b749f750-fbe3-11ee-9224-d7fd2399170d","isLocked":false}
 
-    # If unlocked return 204, if not found return 404
-    # HTTP GET https://lock-states.deno.dev/locks/:lockId
-    curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -I
-    HTTP/2 204 
+    # Get lock state    
+      HTTP GET https://lock-states.deno.dev/locks/:lockId
+    
+      Returns 204 = unlocked, 423 = locked, 404 = not found
+      Example:
+        curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -I
+        HTTP/2 204 
+        or 
+        curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -I
+        HTTP/2 423 
+    
+    # Lock
+      HTTP PATCH https://lock-states.deno.dev/locks/:lockId/lock
+       Query Params:
+        e=ttl_in_seconds
+        k=lockKey for authorization
+      
+      Returns 204 = ok, 401 = unauthorized (bad key), 500 = internal server error
+      Example:
 
-    # Lock state with k=string param and ttl with e=600 (auto unlock)
-    # HTTP PATCH https://lock-states.deno.dev/locks/:lockId/lock
-    #  queryParam ?e=ttl_in_seconds
-    #  queryParam ?k=lockKey for authorization
-    # Returns 204 if ok
-    curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/lock?k=b749f750-fbe3-11ee-9224-d7fd2399170d" -I
-    HTTP/2 204
+        curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/lock?k=b749f750-fbe3-11ee-9224-d7fd2399170d" -I
+        HTTP/2 204
 
-    # Unlock state with k=string param
-    # HTTP PATCH https://lock-states.deno.dev/locks/:lockId/unlock
-    #  queryParam ?k=lockKey for authorization
-    # Returns 204 if ok
-    curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/unlock?k=b749f750-fbe3-11ee-9224-d7fd2399170d" -I
-    HTTP/2 204
-
-    # Check lock status
-    # HTTP GET https://lock-states.deno.dev/locks/:lockId
-    # Returns 204 if unlocked
-    # Returns 423 if locked
-    curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -I
-    HTTP/2 423 
+    # Unlock
+      HTTP PATCH https://lock-states.deno.dev/locks/:lockId/unlock
+       Query Params:
+        e=ttl_in_seconds
+        k=lockKey for authorization
+  
+        Returns 204 = ok, 401 = unauthorized (bad key), 500 = internal server error
+        Example:
+          curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/unlock?k=b749f750-fbe3-11ee-9224-d7fd2399170d" -I
+          HTTP/2 204
 
     # Usecase how to use in "shell" eg. github actions pipeline
     curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -f && echo "there is no lock"
     curl: (22) The requested URL returned error: 423
 
-    # Want to have own deployment? Here you have source code: https://github.com/worotyns/lock-state
+    Want to have own deployment? Here you have source code: https://github.com/worotyns/lock-state
     `
 })
 

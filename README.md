@@ -1,6 +1,11 @@
 # LockState Service
 
-Source code of https://lock-states.deno.dev
+## Current url of running service
 
-## Current url of service
 https://lock-states.deno.dev
+
+## Deploy
+
+Just type:
+
+`deno task deploy`
