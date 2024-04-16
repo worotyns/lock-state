@@ -3,6 +3,7 @@ import { html } from "./deps.ts";
 import { Application } from "./deps.ts";
 import { NotFoundError } from "./lockstate.ts";
 import { LockStateAppService, UnauthorizedError } from "./lockstate.ts";
+
 const app = new Application();
 const router = new Router();
 
@@ -78,7 +79,7 @@ router.get('/', ctx => {
     # Check lock status
     # HTTP GET https://lock-states.deno.dev/locks/:lockId
     # Returns 204 if unlocked
-    # Returns 423 If locked
+    # Returns 423 if locked
     curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -I
     HTTP/2 423 
 
@@ -94,7 +95,7 @@ app.use(async (ctx, next) => {
   try {
     await next();
   } catch (error) {
-    
+
     ctx.response.body = error.message;
     if (error instanceof UnauthorizedError) {
         ctx.response.status = 401;
