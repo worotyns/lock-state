@@ -99,10 +99,15 @@ curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -f && 
 there is no lock
 ```
 
-## Repository
+## Others
+
+### Discussion
+[HackerNews](https://news.ycombinator.com/item?id=40050776)
+
+### Repository
 [Github](https://github.com/worotyns/lock-state)
 
-## License
+### License
 
 Copyright 2024 worotyns@icloud.com
 
