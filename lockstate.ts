@@ -134,8 +134,11 @@ export class LockStateAppService {
     return lock.isLocked();
   }
 
-  async createNew() {
+  async createNew(locked: boolean, expireTime: number = -1) {
     const newLock = LockState.create();
+    if (locked) {
+      newLock.lock(expireTime)
+    }
     await this.save(newLock);
     return newLock;
   }

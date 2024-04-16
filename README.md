@@ -13,12 +13,14 @@ This service can be used in production with low workloads.
 
 ## Create new lock
 HTTP **POST** `https://lock-states.deno.dev/locks`
+### url params:
+- `l=true|1|T` optional if **set**, new lock will be "locked" by default
+- `e=ttl_in_seconds` optional
 ### Returns:
 - 200 = created
 ### Example:
 lockId is your lock identity
 lockKey you should to use when you want to lock/unlock and add as ?k=<lockKey> url param
-new locks are always "unlocked"
 ```sh
 curl -X POST https://lock-states.deno.dev/locks            
 {
@@ -49,7 +51,7 @@ HTTP/2 423
 ## Lock
 HTTP **PATCH** `https://lock-states.deno.dev/locks/:lockId/lock`
 ### url params:
-- `k=lockKey` required for authroization
+- `k=lockKey` required for auth
 - `e=ttl_in_seconds` optional
 ### Returns:
 - 204 = ok
@@ -71,7 +73,7 @@ HTTP/2 204
 ## Unlock
 HTTP **PATCH** `https://lock-states.deno.dev/locks/:lockId/unlock`
 ### url params:
-- `k=lockKey` required for authroization
+- `k=lockKey` required for auth
 ### Returns:
 - 204 = ok
 - 401 = unauthorized
