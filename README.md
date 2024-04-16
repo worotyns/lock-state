@@ -54,9 +54,15 @@ HTTP **PATCH** `https://lock-states.deno.dev/locks/:lockId/lock`
 - 401 = unauthorized
 - 404 = not found
 - 500 = internal server error
-### Example:
+### Examples:
+Lock forever
 ```sh
 curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/lock?k=b749f750-fbe3-11ee-9224-d7fd2399170d" -I
+HTTP/2 204
+```
+Lock for 60 seconds:
+```sh
+curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/lock?k=b749f750-fbe3-11ee-9224-d7fd2399170d&e=60" -I
 HTTP/2 204
 ```
 
