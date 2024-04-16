@@ -18,13 +18,12 @@ HTTP **POST** `https://lock-states.deno.dev/locks`
 ### Example:
 lockId is your lock identity
 lockKey you should to use when you want to lock/unlock and add as ?k=<lockKey> url param
-isLocked is a initial state - new locks always are unlocked
+new locks are always "unlocked"
 ```sh
 curl -X POST https://lock-states.deno.dev/locks            
 {
     "lockId":"01hvkab4t422rap18rwjs2prnm",
     "lockKey":"b749f750-fbe3-11ee-9224-d7fd2399170d",
-    "isLocked":false
 }
 ```
 

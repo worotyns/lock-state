@@ -37,8 +37,7 @@ router.post("/locks", async (ctx) => {
   ctx.response.headers.append("Content-Type", "application/json");
   ctx.response.body = JSON.stringify({
     lockId: lock.getId(),
-    lockKey: lock.getKey(),
-    isLocked: lock.isLocked(),
+    lockKey: lock.getKey()
   });
 });
 
