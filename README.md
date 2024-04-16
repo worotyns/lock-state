@@ -1,8 +1,6 @@
 # LSS
 
-Lock State Service
-
-Very simple service for lock management. 
+Lock State Service for lock(s) management. 
 
 With just a few API calls, you can create, check, and modify your locks.
 
