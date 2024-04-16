@@ -15,7 +15,7 @@ export interface LockStateDTO {
   e: number;
 }
 
-class LockState {
+export class LockState {
   static create() {
     return new LockState({
       e: -1,
@@ -40,15 +40,23 @@ class LockState {
 
   lock(expireTime: number) {
     this.v = true;
-    this.e = expireTime;
+    
+    if (expireTime > -1) {
+      this.e = Date.now() + (expireTime * 1000);
+    }    
   }
 
   unlock() {
     this.v = false;
+    this.e = -1;
   }
 
-  isLocked() {
-    return this.v === true;
+  isLocked(now = Date.now()) {
+    if (this.v === false) {
+      return false;
+    }
+    
+    return this.checkIsExpired(now) === false;
   }
 
   isValidKey(k: string) {
@@ -67,15 +75,11 @@ class LockState {
     return this.k;
   }
 
-  getTtl() {
-    if (!this.isExpiring()) {
-      return -1;
-    }
-
-    return Date.now() + this.e;
+  private checkIsExpired(now: number): boolean {
+    return this.isExpiring() ? now > this.e : false;
   }
 
-  isExpiring() {
+  private isExpiring() {
     return this.e > -1;
   }
 }
@@ -85,13 +89,7 @@ export class LockStateAppService {
   }
 
   private async save(lock: LockState) {
-    if (lock.isExpiring()) {
-      await this.kv.set(["locks", lock.getId()], lock, {
-        expireIn: lock.getTtl(),
-      });
-    } else {
-      await this.kv.set(["locks", lock.getId()], lock);
-    }
+    await this.kv.set(["locks", lock.getId()], lock);
   }
 
   private async get(lockId: string): Promise<LockState> {
