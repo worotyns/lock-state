@@ -1,7 +1,8 @@
 import { Router } from "./deps.ts";
 import { html } from "./deps.ts";
 import { Application } from "./deps.ts";
-import { LockStateAppService } from "./lockstate.ts";
+import { NotFoundError } from "./lockstate.ts";
+import { LockStateAppService, UnauthorizedError } from "./lockstate.ts";
 const app = new Application();
 const router = new Router();
 
@@ -47,22 +48,41 @@ router.patch('/locks/:lockId/toggle', async (ctx) => {
 router.get('/', ctx => {
     ctx.response.status = 200;
     ctx.response.body = html`
+
     # Create new lock
-    curl -X POST https://lock-states.deno.dev/locks                          
+    # HTTP POST https://lock-states.deno.dev/locks
+    # Returns 200 with JSON contains lock data
+    curl -X POST https://lock-states.deno.dev/locks            
     {"lockId":"01hvkab4t422rap18rwjs2prnm","lockKey":"b749f750-fbe3-11ee-9224-d7fd2399170d","isLocked":false}
 
-    # If unlocked return 204
+    # If unlocked return 204, if not found return 404
+    # HTTP GET https://lock-states.deno.dev/locks/:lockId
     curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -I
     HTTP/2 204 
 
     # Lock state with k=string param and ttl with e=600 (auto unlock)
-    curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm\lock?k=b749f750-fbe3-11ee-9224-d7fd2399170d"
+    # HTTP PATCH https://lock-states.deno.dev/locks/:lockId/lock
+    #  queryParam ?e=ttl_in_seconds
+    #  queryParam ?k=lockKey for authorization
+    # Returns 204 if ok
+    curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/lock?k=b749f750-fbe3-11ee-9224-d7fd2399170d" -I
+    HTTP/2 204
 
-    # If locked return 423
+    # Unlock state with k=string param
+    # HTTP PATCH https://lock-states.deno.dev/locks/:lockId/unlock
+    #  queryParam ?k=lockKey for authorization
+    # Returns 204 if ok
+    curl -X PATCH "https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm/unlock?k=b749f750-fbe3-11ee-9224-d7fd2399170d" -I
+    HTTP/2 204
+
+    # Check lock status
+    # HTTP GET https://lock-states.deno.dev/locks/:lockId
+    # Returns 204 if unlocked
+    # Returns 423 If locked
     curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -I
     HTTP/2 423 
 
-    # Using in github actions to stop pipeline if locked
+    # Usecase how to use in "shell" eg. github actions pipeline
     curl -X GET https://lock-states.deno.dev/locks/01hvkab4t422rap18rwjs2prnm -f && echo "there is no lock"
     curl: (22) The requested URL returned error: 423
 
@@ -74,9 +94,16 @@ app.use(async (ctx, next) => {
   try {
     await next();
   } catch (error) {
-    ctx.response.headers.set("Content-Type", "text/plain");
-    ctx.response.status = 500;
+    
     ctx.response.body = error.message;
+    if (error instanceof UnauthorizedError) {
+        ctx.response.status = 401;
+    } else if (error instanceof NotFoundError) {
+        ctx.response.status = 404;
+    } else {
+        ctx.response.status = 500;
+        ctx.response.body = 'Internal server error';
+    }
   }
 });
 

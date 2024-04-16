@@ -1,5 +1,13 @@
 import { ulid, v1 } from "./deps.ts";
 
+export class UnauthorizedError extends Error {
+    name = 'UnauthorizedError';
+}
+
+export class NotFoundError extends Error {
+    name = 'NotFound';
+}
+
 export interface LockStateDTO {
     i: string;
     k: string;
@@ -45,7 +53,7 @@ class LockState {
 
     isValidKey(k: string) {
         if (this.k !== k) {
-            throw new Error('key is not valid');
+            throw new UnauthorizedError('key is not valid');
         }
 
         return true;
@@ -91,7 +99,7 @@ export class LockStateAppService {
         const lock = await this.kv.get<LockStateDTO>(["locks", lockId.toLowerCase()]);
         
         if (!lock.value) {
-            throw new Error('Lock not found');
+            throw new NotFoundError('Lock not found');
         }
 
         return new LockState(lock.value);
