@@ -1,4 +1,6 @@
-# Lock state service
+# LSS
+
+Lock State Service
 
 Very simple service for lock management. 
 
