@@ -13,7 +13,7 @@ This service can be used in production with low workloads.
 
 ## Create new lock
 HTTP **POST** `https://lock-states.deno.dev/locks`
-### url params:
+### Url params:
 - `l=true|1|T` optional if **set**, new lock will be "locked" by default
 - `e=ttl_in_seconds` optional
 ### Returns:
@@ -50,7 +50,7 @@ HTTP/2 423
 
 ## Lock
 HTTP **PATCH** `https://lock-states.deno.dev/locks/:lockId/lock`
-### url params:
+### Url params:
 - `k=lockKey` required for auth
 - `e=ttl_in_seconds` optional
 ### Returns:
@@ -72,7 +72,7 @@ HTTP/2 204
 
 ## Unlock
 HTTP **PATCH** `https://lock-states.deno.dev/locks/:lockId/unlock`
-### url params:
+### Url params:
 - `k=lockKey` required for auth
 ### Returns:
 - 204 = ok
