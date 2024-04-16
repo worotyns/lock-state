@@ -8,19 +8,23 @@ const router = new Router();
 const markdown = Deno.readTextFileSync("./README.md");
 const tokenized = rustyMarkdown.tokens(markdown, { strikethrough: true });
 const rendered = rustyMarkdown.html(tokenized);
+
 const website = html`
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yegor256/tacit@gh-pages/tacit-css.min.css"/>
-    </head>
-    <body>
-      <section>
-        ${rendered}
-      </section>
-    </body>
-    </html>
-  `;
+<!DOCTYPE html>
+<html>
+  <head>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
+  />
+  </head>
+  <body>
+    <main>
+      ${rendered}
+    </main>
+  </body>
+</html>
+`;
 
 const log = (...args: string[]) =>
   console.log(["[", new Date().toISOString(), "]: ", ...args].join(""));
