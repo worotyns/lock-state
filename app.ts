@@ -34,7 +34,8 @@ const lockStateAppService = new LockStateAppService(kv);
 router.post("/locks", async (ctx) => {
   const locked = Boolean(ctx.request.url.searchParams.get("l") ? true : false);
   const expireTime = ~~(ctx.request.url.searchParams.get("e") || -1);
-  const lock = await lockStateAppService.createNew(locked, expireTime);
+  const customKey = ctx.request.url.searchParams.get("k") || null;
+  const lock = await lockStateAppService.createNew(locked, expireTime, customKey);
   ctx.response.status = 200;
   ctx.response.headers.append("Content-Type", "application/json");
   ctx.response.body = JSON.stringify({
@@ -70,7 +71,7 @@ router.get("/", (ctx) => {
 app.use(async (ctx, next) => {
   try {
     await next();
-  } catch (error) {
+  } catch (error: any) {
     ctx.response.body = error.message;
     if (error instanceof UnauthorizedError) {
       ctx.response.status = 401;

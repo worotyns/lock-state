@@ -1,11 +1,11 @@
-import { ulid, v1 } from "./deps.ts";
+import { ulid, v1, assert } from "./deps.ts";
 
 export class UnauthorizedError extends Error {
-  name = "UnauthorizedError";
+  override name = "UnauthorizedError";
 }
 
 export class NotFoundError extends Error {
-  name = "NotFound";
+  override name = "NotFound";
 }
 
 export interface LockStateDTO {
@@ -16,11 +16,16 @@ export interface LockStateDTO {
 }
 
 export class LockState {
-  static create() {
+  static create(customKey: string | null) {
+    if (customKey) {
+      assert(typeof customKey === 'string', 'customKey is required and should be a string'); 
+      assert(customKey.length > 0, 'customKey is required and should not be empty');
+      assert(customKey.length < 256, 'customKey is required and should be less than 256 characters');
+    }
     return new LockState({
       e: -1,
       i: ulid().toString().toLowerCase(),
-      k: v1.generate().toString().toLowerCase(),
+      k: customKey ||v1.generate().toString().toLowerCase(),
       v: false,
     });
   }
@@ -134,8 +139,9 @@ export class LockStateAppService {
     return lock.isLocked();
   }
 
-  async createNew(locked: boolean, expireTime: number = -1) {
-    const newLock = LockState.create();
+  async createNew(locked: boolean, expireTime: number = -1, customKey: string | null = null) {
+    const newLock = LockState.create(customKey);
+    
     if (locked) {
       newLock.lock(expireTime)
     }

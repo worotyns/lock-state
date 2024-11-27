@@ -16,6 +16,7 @@ HTTP **POST** `https://lock-states.deno.dev/locks`
 ### Url params:
 - `l=true|1|T` optional if **set**, new lock will be "locked" by default
 - `e=ttl_in_seconds` optional
+- `k=custom_auth_key` optional custom auth key
 ### Returns:
 - 200 = created
 ### Examples:
