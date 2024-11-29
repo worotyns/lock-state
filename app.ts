@@ -35,12 +35,16 @@ router.post("/locks", async (ctx) => {
   const locked = Boolean(ctx.request.url.searchParams.get("l") ? true : false);
   const expireTime = ~~(ctx.request.url.searchParams.get("e") || -1);
   const customKey = ctx.request.url.searchParams.get("k") || null;
-  const lock = await lockStateAppService.createNew(locked, expireTime, customKey);
+  const lock = await lockStateAppService.createNew(
+    locked,
+    expireTime,
+    customKey,
+  );
   ctx.response.status = 200;
   ctx.response.headers.append("Content-Type", "application/json");
   ctx.response.body = JSON.stringify({
     lockId: lock.getId(),
-    lockKey: lock.getKey()
+    lockKey: lock.getKey(),
   });
 });
 

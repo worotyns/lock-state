@@ -1,4 +1,4 @@
-import { ulid, v1, assert } from "./deps.ts";
+import { assert, ulid, v1 } from "./deps.ts";
 
 export class UnauthorizedError extends Error {
   override name = "UnauthorizedError";
@@ -18,14 +18,23 @@ export interface LockStateDTO {
 export class LockState {
   static create(customKey: string | null) {
     if (customKey) {
-      assert(typeof customKey === 'string', 'customKey is required and should be a string'); 
-      assert(customKey.length > 0, 'customKey is required and should not be empty');
-      assert(customKey.length < 256, 'customKey is required and should be less than 256 characters');
+      assert(
+        typeof customKey === "string",
+        "customKey is required and should be a string",
+      );
+      assert(
+        customKey.length > 0,
+        "customKey is required and should not be empty",
+      );
+      assert(
+        customKey.length < 256,
+        "customKey is required and should be less than 256 characters",
+      );
     }
     return new LockState({
       e: -1,
       i: ulid().toString().toLowerCase(),
-      k: customKey ||v1.generate().toString().toLowerCase(),
+      k: customKey || v1.generate().toString().toLowerCase(),
       v: false,
     });
   }
@@ -45,10 +54,10 @@ export class LockState {
 
   lock(expireTime: number) {
     this.v = true;
-    
+
     if (expireTime > -1) {
       this.e = Date.now() + (expireTime * 1000);
-    }    
+    }
   }
 
   unlock() {
@@ -60,7 +69,7 @@ export class LockState {
     if (this.v === false) {
       return false;
     }
-    
+
     return this.checkIsExpired(now) === false;
   }
 
@@ -139,11 +148,15 @@ export class LockStateAppService {
     return lock.isLocked();
   }
 
-  async createNew(locked: boolean, expireTime: number = -1, customKey: string | null = null) {
+  async createNew(
+    locked: boolean,
+    expireTime: number = -1,
+    customKey: string | null = null,
+  ) {
     const newLock = LockState.create(customKey);
-    
+
     if (locked) {
-      newLock.lock(expireTime)
+      newLock.lock(expireTime);
     }
     await this.save(newLock);
     return newLock;
