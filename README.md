@@ -159,17 +159,13 @@ curl --head -X GET --fail --retry 300 --retry-connrefused --retry-all-errors --r
 
 ## Others
 
-### Discussion
-
-[HackerNews](https://news.ycombinator.com/item?id=40050776)
-
 ### Repository
 
 [Github](https://github.com/worotyns/lock-state)
 
 ### License
 
-Copyright 2024 worotyns@icloud.com
+Copyright 2024 worotyns@icloud.com https://worotyns.ovh
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
